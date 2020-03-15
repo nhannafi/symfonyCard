@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome to CardGame!{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-expand-lg ftco_navbar ftco-navbar-light" id="ftco-navbar">
+    <div class="container">
+        <div class="navbar-brand">Card app</div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span> Menu
+            </button>
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item"><a class="navbar-brand" href="{{path('card')}}" class="nav-brand">Form Card</a></li>
+                        <li class="nav-item"><a class="navbar-brand" href="{{path('category')}}" class="nav-brand">Form Category</a></li>
+                        <li class="nav-item"><a class="navbar-brand" href="{{path('card')}}" class="nav-brand">Form Deck</a></li>
+                        <li class="nav-item"><a class="navbar-brand" href="{{path('card_list')}}" class="nav-brand">Cards List</a></li>
+                        <li class="nav-item"><a class="navbar-brand" href="{{path('deck_list')}}" class="nav-brand">Desk List</a></li>
+                        <li class="nav-item"><a class="navbar-brand" href="{{path('card')}}" class="nav-brand" download="export.csv">Card Export</a></li>
+                        <li class="nav-item">{# <a class="navbar-brand" href="{{path('')}}" class="nav-brand" >Log out</a> #}</li>
+                    </ul>
+            </div>            
+    </div>
+
+</nav>
+<div class="mt-7 d-none loader text-center">
+        <div class="spinner-border" style="width: 3em; height: 3em;"></div>
+    </div>
+     <div class="container mt-head p-4 bg-white rounded mb-4" id="pageContent">
+        <h5>Select a choice in the menu.</h5>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    $('nav a').click(function(e){
+        e.preventDefault();
+        $('nav a').removeClass('active');
+        $(this).addClass('active');
+        $("#pageContent").load($(this).attr('href'));
+    })
+
+    $("#pageContent").on('submit', 'form', function (e) {
+        e.preventDefault();
+        var form = $(this);
+
+        $.ajax ({
+            type: "POST",
+            url: form.attr('action'),
+            data: new FormData(this),
+            contentType: false,
+            processData: false,
+            success: function success(response) {
+                $("#pageContent").load($('.active').attr('href'));
+            }
+        });
+    }); 
+});
+</script>
+{% endblock %}
+

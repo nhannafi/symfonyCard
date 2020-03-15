@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CardController!{% endblock %}
+
+{% block body %}
+
+    {{ form_start(form, {'action' : path(app.request.attributes.get('_route')), 'method':'POST', 'enctype':'multiple/form-data'}) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+
+    {# <div>
+        <ul class="list-group">
+        {% for entities in entiities %}
+            <li>
+                <li class="list-group-item">{{ entity.name}}
+            </li>
+        {% endfor %}
+        </ul> 
+    </div> #}
+
+{% endblock %}
