@@ -4,7 +4,12 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CardRepository")
  */
@@ -48,7 +53,10 @@ class Card
      */
     private $image;
 
-    
+         /** @ORM\ManyToMany(targetEntity="App\Entity\SpecialCapacity", mappedBy="cards")
+     * @Assert\Count(min="0", max="2")
+     */
+    private $SpecialCapacity;
 
     public function getId(): ?int
     {
@@ -124,6 +132,29 @@ class Card
     {
         $this->image = $image;
 
+        return $this;
+    }
+    /**
+     * @return Collection|SpecialCapacity[]
+     */
+    public function getSpecialCapacities(): Collection
+    {
+        return $this->specialCapacities;
+    }
+    public function addSpecialCapacity(SpecialCapacity $specialCapacity): self
+    {
+        if (!$this->specialCapacities->contains($specialCapacity)) {
+            $this->specialCapacities[] = $specialCapacity;
+            $specialCapacity->addCard($this);
+        }
+        return $this;
+    }
+    public function removeSpecialCapacity(SpecialCapacity $specialCapacity): self
+    {
+        if ($this->specialCapacities->contains($specialCapacity)) {
+            $this->specialCapacities->removeElement($specialCapacity);
+            $specialCapacity->removeCard($this);
+        }
         return $this;
     }
    
